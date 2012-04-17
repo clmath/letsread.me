@@ -1,0 +1,97 @@
+/* Freely adapted from the enhanced
+ * version of Bootstrap found at
+ * http://jasny.github.com/bootstrap
+ */
+
+.nav-tabs > li > a {
+  outline: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 16px;
+  border: 1px solid transparent;
+}
+.nav-tabs > li > a:hover {
+  text-decoration: none;
+  background-color: #eeeeee;
+  color: rgb(0, 105, 214);
+}
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover {
+  color: #555555;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+  cursor: default;
+  font-weight: bold;
+}
+
+.tabbable {
+  *zoom: 1;
+  border-style: solid;
+  border-color: #ddd;
+  border-width: 0px;
+}
+.tabbable > .nav-tabs {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.tabbable-bordered {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.tab-content {
+  overflow: auto;
+  border-style: solid;
+  border-color: #ddd;
+  border-width: 0px;
+  padding: 18px 0 0 0;
+}
+
+.tabs-left {
+  margin-bottom: 20px;
+}
+.tabs-left > .nav-tabs {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0;
+  float: left;
+  left: 1px;
+  border-right: 1px solid #ddd;
+}
+.tabs-left > .nav-tabs > li {
+  float: none;
+}
+.tabs-left > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-bottom: 3px;
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+  -moz-border-radius: 4px 0 0 4px;
+  border-radius: 4px 0 0 4px;
+}
+.tabs-left > .nav-tabs > li > a:hover {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+.tabs-left > .tab-content {
+  overflow: hidden;
+  padding: 17px 0 17px 17px;
+  margin-left: 0;
+}
+.tabs-left.tabbable-bordered {
+  border-width: 0 1px 0 0;
+}
+.tabs-left.tabbable-bordered > .tab-content {
+  border-width: 1px 0px 1px 1px;
+  -webkit-border-radius: 0 4px 4px 0;
+  -moz-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+}
