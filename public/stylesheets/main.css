@@ -17,7 +17,7 @@
   line-height: 14px;
   margin-left: 5px;
   vertical-align: text-top;
-  background-image: url("public/images/glyphicons_download_alt.png");
+  background-image: url("/public/images/glyphicons_download_alt.png");
   background-repeat: no-repeat;
 }
 
@@ -27,7 +27,7 @@
 .field label {width: auto;padding: 0;}
 
 /* Used for the Switch effect: */
-.cb-enable, .cb-disable, .cb-enable span, .cb-disable span { background: url("public/images/switch.gif") repeat-x; display: block; float: right; }
+.cb-enable, .cb-disable, .cb-enable span, .cb-disable span { background: url("/public/images/switch.gif") repeat-x; display: block; float: right; }
 .cb-enable span, .cb-disable span { line-height: 30px; display: block; background-repeat: no-repeat; font-weight: bold; }
 .cb-enable span { background-position: left -90px; padding: 0 10px; }
 .cb-disable span { background-position: right -180px;padding: 0 10px; }
