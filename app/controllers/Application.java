@@ -263,6 +263,71 @@ public class Application extends BookHelper {
     }
 
     /**
+     * An authenticated user asks to add a new keyword to a feed.
+     * 
+     * @param feedId
+     * 	          The id of the manipulated feed.
+     * @param keywords
+     *            All the keywords of the feed including the new one.
+     */
+    public static void addKeywordToFeed(@Required Long feedId, @Required List<String> keywords) {
+       User user = getUser();
+        if (user == null) {
+            logout();
+        }
+        
+        // Check that the feed exist and belong to the user
+    	Feed feed = Feed.findById(feedId);
+        if (validation.hasErrors() || feed == null || feed.creator != user) {
+        	System.out.println("Bad feed");
+        	index();
+        }
+
+        // Add only the last keyword
+        String keyword = keywords.get(keywords.size()-1);
+ 
+        // Check that the keyword is new
+    	if (feed.getKeyword(keyword) != null) {
+        	System.out.println("Bad keyword");
+        	index();
+        }
+  
+    	System.out.println("Number of keywords :" + keywords.size());
+        System.out.println("Received new keyword - user: " + user.toString() + " - feed: " + feed.title + " - Keyword: "
+                + keyword);
+        
+        feed.addKeyword(keyword);
+        index();
+    }
+    
+    /**
+     * An authenticated user asks to add a new keyword to a feed.
+     * 
+     * @param keyword
+     *            The keyword, as requested by the user.
+     */
+    public static void deleteKeywordFromFeed(@Required Long feedId, @Required String keyword) {
+        
+    	User user = getUser();
+        
+        if (user == null) {
+            logout();
+        }
+        
+        // Check that the feed exist and belong to the user
+    	Feed feed = Feed.findById(feedId);
+        if (validation.hasErrors() || feed == null || feed.creator != user) {
+        	index();
+        }
+
+        System.out.println("Deleted keyword - user: " + user.toString() + " - feed: " + feed.title + " - Keyword: "
+                + keyword);
+        
+        feed.deleteKeyword(keyword);
+        index();
+    }
+    
+    /**
      * Retrieve the content of a RSS feed. Content is put in application cache,
      * with a Time To Live defined in {@link #CACHE_TTL}.
      * 

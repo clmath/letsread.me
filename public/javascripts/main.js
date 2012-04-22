@@ -1,5 +1,27 @@
 // Init the taggit module
-$(function(){$('.Tags').tagit({allowSpaces: true, removeConfirmation: true});});
+$(function () {
+	$('.Tags').tagit({
+		allowSpaces: true,
+		removeConfirmation: true,
+		
+		onTagRemoved: function(evt, tag) {
+			$('.tab-content .active .deleteKw').attr('value', $('.Tags').tagit('tagLabel', tag));
+			$('.tab-content .active .deleteKw').parent().submit();
+    	}
+	}).tagit('option', 'onTagAdded', function(evt, tag) {
+		// Add this callbackafter we initialize the widget,
+		// so that onTagAdded doesn't get called on page load.
+			// Submit the form
+			$('.tab-content .active .Tags').parent().submit();
+   	});
+});
+
+
+// Init the form module
+$(function() {  
+	$('.Tags').parent().ajaxForm(); 
+	$('.deleteKw').parent().ajaxForm();	
+});  
 
 // On/Off button from http://devgrow.com/iphone-style-switches/
 $(document).ready( function(){

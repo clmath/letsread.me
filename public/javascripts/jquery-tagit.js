@@ -28,7 +28,7 @@
 
     $.widget('ui.tagit', {
         options: {
-            itemName : 'item',
+            itemName : 'keywords',
             fieldName : 'tags',
             availableTags : [],
             tagSource : null,
@@ -340,16 +340,20 @@
                 this._updateSingleTagsField(tags);
             } else {
                 var escapedValue = label.html();
-                tag.append('<input type="hidden" style="display:none;" value="' + escapedValue + '" name="' + this.options.itemName + '[' + this.options.fieldName + '][]" />');
+                tag.append('<input type="hidden" style="display:none;" value="' + escapedValue + '" name="' + this.options.itemName + '[]" />');
             }
-
-            this._trigger('onTagAdded', null, tag);
 
             // Cleaning the input.
             this._tagInput.val('');
 
             // insert tag
             this._tagInput.parent().before(tag);
+            
+            
+            // Modification by Clement Mathieu
+            // trigger the event
+            this._trigger('onTagAdded', null, tag);
+            
         },
         
         removeTag: function(tag, animate) {

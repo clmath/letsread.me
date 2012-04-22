@@ -37,11 +37,15 @@ public class Feed extends Model implements Comparable<Feed> {
     @ManyToOne
     public User creator;
 
+    @OneToMany(mappedBy="feed", cascade=CascadeType.ALL)
+    public List<Keyword> keywords;
+
     public Feed(User creator, String title, URL url) {
         this.creator = creator;
         this.title = title;
         this.url = url;
         this.createdAt = new Date();
+        this.keywords = new ArrayList<Keyword>();
     }
 
     public static void delete(User creator, URL url) {
@@ -49,6 +53,60 @@ public class Feed extends Model implements Comparable<Feed> {
         feed.delete();
     }
 
+    /**
+     * Return the Keyword object standing for keyword if there is one 
+     * in the feed or null if there is no matching Keyword objects.  
+     * 
+     * @param keyword 
+     * @return 
+     * 		The Keyword object for the keyword in the feed.
+     */
+	public Keyword getKeyword(String keyword) {
+		for (Keyword kw : keywords) {
+			if (kw.keyword.compareToIgnoreCase(keyword) == 0) {
+				return kw;				
+			}
+		}
+		return null;
+	}
+    
+	/**
+     * Return the index of keyword in feed's keywords list if there is one 
+     * or -1 if there is no match.  
+     * 
+     * @param keyword 
+     * @return 
+     * 		The keyword index in the keywords of the feed.
+     */
+	public int getKeywordIndex(String keyword) {
+		int j = 0;
+		for (Keyword kw : keywords) {
+			if (kw.keyword.compareToIgnoreCase(keyword) == 0) {
+				return j;				
+			}
+			j++;
+		}
+		return -1;
+	}
+	
+    public Feed addKeyword(String keyword) {
+		Keyword newKeyword = new Keyword(this, keyword).save();
+		this.keywords.add(newKeyword);
+		this.save();
+		return this;
+	}
+	
+	public Feed deleteKeyword(String keyword) {
+		Keyword delKeyword = getKeyword(keyword);
+		int delIndex = getKeywordIndex(keyword);
+		if (delKeyword != null && delIndex != -1) {
+			this.keywords.remove(delIndex);
+			delKeyword.delete();
+		}
+		this.save();
+		return this;
+	}
+	
     /**
      * Alphabetical order.
      */

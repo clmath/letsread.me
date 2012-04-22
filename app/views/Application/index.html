@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			#{/form}
-    #{/if}
+    	#{/if}
 		#{else}
 			<div class="alert-message warning" ><p>For this experiment phase, <strong>each user is limited to 5 feeds</strong>. We are running on a free cloud server hosting... so let's spare resources for the moment.</p></div>
 		#{/else}
@@ -40,6 +40,7 @@
 				#{list items:feeds, as:'feed'}
 					<li #{if feed_isFirst}class="active"#{/if}><a href="#${feed.title}" data-toggle="tab">${feed.title}</a></li>
 				#{/list}
+				<li></li>
 			</ul>
 
 			<div class="tab-content span12">
@@ -64,10 +65,17 @@
 						<div class="row">
 							<div class="span5">
 								<h5>Keywords:</h5>
-								<form>
+								#{form @Application.addKeywordToFeed(feed.id)}
 									<p></p>
-									<ul class="Tags"></ul>
-								</form>
+									<ul class="Tags">
+									#{list items:feed.keywords, as:'kw'}
+									<li>${kw?.keyword}</li>
+									#{/list}
+									</ul>
+								#{/form}
+								#{form @Application.deleteKeywordFromFeed(feed.id)}
+									<input class="deleteKw" type="text" style="display: none" value="" name="keyword" />
+								#{/form}
 								<p style="text-align:right;"><a href="#" class="btn success">Filtered Epub <i class="icon-download-alt"></i></a></p>
 							</div>
 							<div class="span5 offset1">
