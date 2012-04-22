@@ -157,10 +157,14 @@ public class Application extends BookHelper {
      */
     private static void downloadBook(String feedTitle, URL feedUrl, List<Keyword> keywords) throws IllegalArgumentException, FeedException,
             IOException {
-        Document doc = getContent(feedUrl);
+    	Document doc = getContent(feedUrl);
+    	String filtered = "";
+    	if (keywords != null && !keywords.isEmpty()) {
+    		filtered = "Filtered";
+    	}
         InputStream bookStream = renderBook(feedUrl, doc, keywords);
         if (bookStream != null) {
-            renderBinary(bookStream, feedTitle + ".epub", "application/epub+zip", false);
+            renderBinary(bookStream, feedTitle + filtered + ".epub", "application/epub+zip", false);
         } else {
             flash.error("Could not create book.");
             index();

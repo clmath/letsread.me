@@ -74,6 +74,7 @@ public class BookHelper extends Controller {
             IOException {
 
         Book book = null;
+       
         book = createBookFromFeed(feedUrl, doc, keywords);
 
         if (book != null) {
@@ -91,6 +92,7 @@ public class BookHelper extends Controller {
             return new ByteArrayInputStream(bos.toByteArray());
 
         }
+
         return null;
     }
 
@@ -171,7 +173,7 @@ public class BookHelper extends Controller {
         List<SyndEntry> entries = feed.getEntries();
 
         for (SyndEntry entry : entries) {
-	        //if (matchesKeyword(entry, keywords)) {
+        	if (matchesKeyword(entry, keywords)) {
 	        	
 	            StringBuilder title = new StringBuilder(100);
 	            if (entry.getTitle() != null) {
@@ -217,7 +219,7 @@ public class BookHelper extends Controller {
 	                // TODO Auto-generated catch block
 	                e.printStackTrace();
 	            }
-	       // }	        	
+	    	}	        	
         }
 
         return book;
@@ -254,10 +256,10 @@ public class BookHelper extends Controller {
     }
     
     private static Boolean matchesKeyword(SyndEntry entry, List<Keyword> keywords) {
-        if (keywords != null) {
+        if (keywords != null && !keywords.isEmpty()) {
 	    	String content = ((SyndContent) entry.getContents().get(0)).getValue(); 
 	        for (Keyword kw : keywords){
-	        	if (content.contains(kw.keyword)) {
+	        	if (content.toLowerCase().contains((" "+kw.keyword+" ").toLowerCase())) {
 	        		return true;
 	        	}
 	        }

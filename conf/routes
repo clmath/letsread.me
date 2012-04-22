@@ -3,12 +3,13 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET		/										Application.index
 GET		/{feedTitle}SAMPLE.epub					Application.downloadSample
+GET		/{feedTitle}Filtered.epub				Application.downloadFiltered
 GET		/{feedTitle}.epub						Application.download
 
 # OpenID auth
-GET		/login                					Application.login
+GET		/login									Application.login
 GET		/logout									Application.logout
 *		/authenticate         					Application.authenticate
 

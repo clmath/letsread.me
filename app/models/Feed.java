@@ -37,7 +37,7 @@ public class Feed extends Model implements Comparable<Feed> {
     @ManyToOne
     public User creator;
 
-    @OneToMany(mappedBy="feed", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="feed", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     public List<Keyword> keywords;
 
     public Feed(User creator, String title, URL url) {
