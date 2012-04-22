@@ -76,7 +76,7 @@
 								#{form @Application.deleteKeywordFromFeed(feed.id)}
 									<input class="deleteKw" type="text" style="display: none" value="" name="keyword" />
 								#{/form}
-								<p style="text-align:right;"><a href="#" class="btn success">Filtered Epub <i class="icon-download-alt"></i></a></p>
+								<p style="text-align:right;">#{a @Application.downloadFiltered(feed.title), class:'btn success'}Filtered Epub <i class="icon-download-alt"></i>#{/a}</p>
 							</div>
 							<div class="span5 offset1">
 								<div class="row">

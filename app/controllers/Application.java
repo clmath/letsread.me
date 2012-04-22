@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.Feed;
+import models.Keyword;
 import models.User;
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
@@ -108,9 +109,25 @@ public class Application extends BookHelper {
      */
     public static void download(String feedTitle) throws IllegalArgumentException, FeedException, IOException {
         Feed feed = Feed.find("byCreatorAndTitle", getUser(), feedTitle).first();
-        downloadBook(feed.title, feed.url);
+        downloadBook(feed.title, feed.url, null);
     }
 
+    /**
+     * Downloads a filtered feed as an ebook. The feed is identified by its title AND the
+     * user.
+     * 
+     * @param feedTitle
+     *            The title of the feed to be rendered as an ebook.
+     * @throws IllegalArgumentException
+     * @throws FeedException
+     * @throws IOException
+     */
+    public static void downloadFiltered(String feedTitle) throws IllegalArgumentException, FeedException, IOException {
+        Feed feed = Feed.find("byCreatorAndTitle", getUser(), feedTitle).first();
+        downloadBook(feed.title, feed.url, feed.keywords);
+    }
+
+    
     /**
      * Downloads a sample feed as an ebook. Sample feeds are not stored like
      * user feeds, they don't need an authentication.
@@ -123,7 +140,7 @@ public class Application extends BookHelper {
      */
     public static void downloadSample(String feedTitle) throws IllegalArgumentException, FeedException, IOException {
         URL feedUrl = SampleFeedsHelper.getFeedURL(feedTitle);
-        downloadBook(feedTitle, feedUrl);
+        downloadBook(feedTitle, feedUrl, null);
     }
 
     /**
@@ -138,10 +155,10 @@ public class Application extends BookHelper {
      * @throws FeedException
      * @throws IOException
      */
-    private static void downloadBook(String feedTitle, URL feedUrl) throws IllegalArgumentException, FeedException,
+    private static void downloadBook(String feedTitle, URL feedUrl, List<Keyword> keywords) throws IllegalArgumentException, FeedException,
             IOException {
         Document doc = getContent(feedUrl);
-        InputStream bookStream = renderBook(feedUrl, doc);
+        InputStream bookStream = renderBook(feedUrl, doc, keywords);
         if (bookStream != null) {
             renderBinary(bookStream, feedTitle + ".epub", "application/epub+zip", false);
         } else {

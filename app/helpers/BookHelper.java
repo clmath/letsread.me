@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import models.Keyword;
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Resource;
@@ -69,11 +70,11 @@ public class BookHelper extends Controller {
      * @throws FeedException
      * @throws IOException
      */
-    protected static InputStream renderBook(URL feedUrl, Document doc) throws IllegalArgumentException, FeedException,
+    protected static InputStream renderBook(URL feedUrl, Document doc, List<Keyword> keywords) throws IllegalArgumentException, FeedException,
             IOException {
 
         Book book = null;
-        book = createBookFromFeed(feedUrl, doc);
+        book = createBookFromFeed(feedUrl, doc, keywords);
 
         if (book != null) {
             EpubWriter epubWriter = new EpubWriter();
@@ -106,7 +107,7 @@ public class BookHelper extends Controller {
      * @throws FeedException
      * @throws IOException
      */
-    private static Book createBookFromFeed(URL url, Document doc) throws IllegalArgumentException, FeedException,
+    private static Book createBookFromFeed(URL url, Document doc, List<Keyword> keywords) throws IllegalArgumentException, FeedException,
             IOException {
         Book book = new Book();
         // start parsing our feed and have the above onItem methods called
@@ -170,52 +171,53 @@ public class BookHelper extends Controller {
         List<SyndEntry> entries = feed.getEntries();
 
         for (SyndEntry entry : entries) {
-
-            StringBuilder title = new StringBuilder(100);
-            if (entry.getTitle() != null) {
-                title.append(entry.getTitle());
-            }
-            if (entry.getAuthor() != null) {
-                title.append(" - ").append(entry.getAuthor());
-            }
-            StringBuilder content = new StringBuilder();
-
-            // Add title inside text
-            content.append("<h2>").append(title).append("</h2>");
-
-            if (entry.getDescription() != null) {
-                SyndContent syndContent = (SyndContent) entry.getDescription();
-                if (!syndContent.getType().contains("html")) {
-                    content.append("<pre>\n");
-                }
-                content.append(syndContent.getValue());
-                if (!syndContent.getType().contains("html")) {
-                    content.append("\n</pre>");
-                }
-                content.append("<hr/>");
-            }
-
-            if (entry.getContents().size() > 0) {
-                SyndContent syndContent = (SyndContent) entry.getContents().get(0);
-                if (!syndContent.getType().contains("html")) {
-                    content.append("<pre>\n");
-                }
-                content.append(syndContent.getValue());
-                if (!syndContent.getType().contains("html")) {
-                    content.append("\n</pre>");
-                }
-            }
-            String strContent = clean(content.toString());
-            // Add Chapter
-            try {
-                entryNumber++;
-                book.addSection(title.toString(), new Resource(new StringReader(strContent), "entry" + entryNumber
-                        + ".xhtml"));
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
+	        //if (matchesKeyword(entry, keywords)) {
+	        	
+	            StringBuilder title = new StringBuilder(100);
+	            if (entry.getTitle() != null) {
+	                title.append(entry.getTitle());
+	            }
+	            if (entry.getAuthor() != null) {
+	                title.append(" - ").append(entry.getAuthor());
+	            }
+	            StringBuilder content = new StringBuilder();
+	
+	            // Add title inside text
+	            content.append("<h2>").append(title).append("</h2>");
+	
+	            if (entry.getDescription() != null) {
+	                SyndContent syndContent = (SyndContent) entry.getDescription();
+	                if (!syndContent.getType().contains("html")) {
+	                    content.append("<pre>\n");
+	                }
+	                content.append(syndContent.getValue());
+	                if (!syndContent.getType().contains("html")) {
+	                    content.append("\n</pre>");
+	                }
+	                content.append("<hr/>");
+	            }
+	
+	            if (entry.getContents().size() > 0) {
+	                SyndContent syndContent = (SyndContent) entry.getContents().get(0);
+	                if (!syndContent.getType().contains("html")) {
+	                    content.append("<pre>\n");
+	                }
+	                content.append(syndContent.getValue());
+	                if (!syndContent.getType().contains("html")) {
+	                    content.append("\n</pre>");
+	                }
+	            }
+	            String strContent = clean(content.toString());
+	            // Add Chapter
+	            try {
+	                entryNumber++;
+	                book.addSection(title.toString(), new Resource(new StringReader(strContent), "entry" + entryNumber
+	                        + ".xhtml"));
+	            } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            }
+	       // }	        	
         }
 
         return book;
@@ -249,5 +251,19 @@ public class BookHelper extends Controller {
                                                    // Mashable RSS feed...
                 + "</body></html>";
         return content;
+    }
+    
+    private static Boolean matchesKeyword(SyndEntry entry, List<Keyword> keywords) {
+        if (keywords != null) {
+	    	String content = ((SyndContent) entry.getContents().get(0)).getValue(); 
+	        for (Keyword kw : keywords){
+	        	if (content.contains(kw.keyword)) {
+	        		return true;
+	        	}
+	        }
+        } else {
+        	return true; // No keyword so everything matches
+        }
+        return false;
     }
 }
